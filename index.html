@@ -3,354 +3,171 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>METHAI Writing Splash Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>METHAI Splash Screen</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Kalam:wght@400;700&family=Concert+One&family=Itim&family=Bagel+Fat+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:#f7f7f7;
-  color:#222;
-  font-family:Arial,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-header{
-  text-align:center;
-  padding:28px 15px 12px;
+
+html, body {
+  width: 100%;
+  height: 100%;
 }
-header h1{
-  margin:0 0 8px;
-  font-size:25px;
+
+body {
+  background: #EDE7FF;
+  overflow: hidden;
 }
-header p{
-  margin:0;
-  color:#777;
-  font-size:13px;
+
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EDE7FF;
 }
-.grid{
-  max-width:1100px;
-  margin:25px auto;
-  padding:0 15px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:17px;
+
+.logo {
+  width: min(72vw, 380px);
+  height: auto;
+  overflow: visible;
 }
-.card{
-  background:white;
-  border-radius:18px;
-  padding:16px;
-  box-shadow:0 5px 20px #0000000a;
-}
-.card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  font-size:13px;
-  font-weight:bold;
-}
-.preview{
-  height:175px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-}
-.preview svg{
-  width:100%;
-  max-width:450px;
-  overflow:visible;
-}
-button{
-  border:0;
-  background:#ff6500;
-  color:white;
-  padding:10px 15px;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-}
-.controls{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-}
-small{color:#888}
-.fullscreen{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:white;
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
-.fullscreen.show{display:flex}
-.fullscreen svg{
-  width:min(94vw,900px);
-  overflow:visible;
-}
-.close{
-  position:absolute;
-  top:25px;
-  right:25px;
-}
-.fullscreen .font-label{
-  position:absolute;
-  bottom:35px;
-  color:#777;
-  font-size:14px;
-}
-@media(max-width:650px){
-  .grid{grid-template-columns:1fr}
-  .preview{height:145px}
+
+.logo text {
+  font-family: 'Kalam', cursive;
+  font-size: 130px;
+  font-weight: 400;
+  fill: #E82B65;
+  stroke: #E82B65;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>METHAI — Writing Splash Studio</h1>
-  <p>6 fonts • Letter-by-letter SVG outline drawing • Auto replay</p>
-</header>
-
-<div class="grid" id="grid"></div>
-
-<div class="fullscreen" id="fullscreen">
-  <button class="close" onclick="closeSplash()">✕ Close</button>
-  <div id="largePreview" style="width:100%;display:flex;justify-content:center"></div>
-  <div class="font-label" id="largeLabel"></div>
+<div class="splash">
+  <svg
+    class="logo"
+    id="methaiLogo"
+    viewBox="0 0 800 210"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="METHAI"
+  ></svg>
 </div>
 
 <script>
-const FONTS = [
-  {
-    number:75,
-    name:"Righteous",
-    weight:400,
-    color:"#ff6500"
-  },
-  {
-    number:233,
-    name:"Kalam",
-    weight:400,
-    color:"#e82b65"
-  },
-  {
-    number:234,
-    name:"Kalam",
-    weight:700,
-    color:"#0caa7c"
-  },
-  {
-    number:386,
-    name:"Concert One",
-    weight:700,
-    color:"#7646d9"
-  },
-  {
-    number:400,
-    name:"Itim",
-    weight:700,
-    color:"#007bdb"
-  },
-  {
-    number:412,
-    name:"Bagel Fat One",
-    weight:700,
-    color:"#ed9400"
-  }
-];
-
 const WORD = "METHAI";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const DURATION = 2900;
-const LETTER_START = 100;
-const LETTER_STEP = 340;
-const DRAW_TIME = 390;
+const DURATION = 2000;
+const LETTER_START = 50;
+const LETTER_STEP = 225;
+const DRAW_TIME = 270;
 
-function makeSVG(font,large=false){
-  const svg = document.createElementNS(SVG_NS,"svg");
-  svg.setAttribute("viewBox","0 0 800 210");
-  svg.setAttribute("role","img");
-  svg.setAttribute("aria-label","METHAI");
+const svg = document.getElementById("methaiLogo");
+const group = document.createElementNS(SVG_NS, "g");
 
-  const letters = [];
-  const group = document.createElementNS(SVG_NS,"g");
+svg.appendChild(group);
 
-  svg.appendChild(group);
+const letters = [];
 
-  for(let i=0;i<WORD.length;i++){
-    const letter = document.createElementNS(SVG_NS,"text");
+for (let i = 0; i < WORD.length; i++) {
+  const letter = document.createElementNS(SVG_NS, "text");
 
-    letter.textContent = WORD[i];
-    letter.setAttribute("x","0");
-    letter.setAttribute("y","143");
-    letter.setAttribute("font-family",font.name);
-    letter.setAttribute("font-size","125");
-    letter.setAttribute("font-weight",font.weight);
-    letter.setAttribute("fill",font.color);
-    letter.setAttribute("stroke",font.color);
-    letter.setAttribute("stroke-width","2.5");
-    letter.setAttribute("stroke-linejoin","round");
-    letter.setAttribute("paint-order","stroke fill");
+  letter.textContent = WORD[i];
+  letter.setAttribute("x", "0");
+  letter.setAttribute("y", "143");
 
-    group.appendChild(letter);
-    letters.push(letter);
+  group.appendChild(letter);
+  letters.push(letter);
+}
+
+async function startSplash() {
+  try {
+    await document.fonts.load('400 130px "Kalam"', WORD);
+  } catch (error) {
+    console.warn("Font loading:", error);
   }
 
-  async function layout(){
-    try {
-      await document.fonts.load(
-        `${font.weight} 125px "${font.name}"`,
-        WORD
-      );
-    } catch(e){}
+  let cursor = 0;
 
-    let cursor = 0;
-    for(const letter of letters){
-      letter.setAttribute("x",cursor);
-      cursor += letter.getComputedTextLength() + 4;
-    }
+  letters.forEach(letter => {
+    letter.setAttribute("x", cursor);
+    cursor += letter.getComputedTextLength() + 4;
+  });
 
-    const scale = Math.min(1,720/cursor);
-    const offset = (800-cursor*scale)/2;
+  const scale = Math.min(1, 720 / cursor);
+  const offset = (800 - cursor * scale) / 2;
 
-    group.setAttribute(
-      "transform",
-      `translate(${offset} 0) scale(${scale} 1)`
+  group.setAttribute(
+    "transform",
+    `translate(${offset} 0) scale(${scale} 1)`
+  );
+
+  letters.forEach((letter, i) => {
+    const length = Math.max(
+      700,
+      letter.getComputedTextLength() * 8
     );
 
-    animateLetters();
-  }
+    letter.style.strokeDasharray = length;
+    letter.style.strokeDashoffset = length;
+    letter.style.fillOpacity = 0;
 
-  let animations=[];
+    const start = LETTER_START + i * LETTER_STEP;
+    const end = start + DRAW_TIME;
 
-  function animateLetters(){
-    animations.forEach(a=>a.cancel());
-    animations=[];
-
-    letters.forEach((letter,i)=>{
-      const length = Math.max(
-        700,
-        letter.getComputedTextLength()*8
-      );
-
-      letter.style.strokeDasharray = length;
-      letter.style.strokeDashoffset = length;
-      letter.style.fillOpacity = 0;
-
-      const start = LETTER_START+i*LETTER_STEP;
-      const drawEnd = start+DRAW_TIME;
-
-      const anim=letter.animate([
-        {
-          offset:0,
-          strokeDashoffset:length,
-          fillOpacity:0
-        },
-        {
-          offset:start/DURATION,
-          strokeDashoffset:length,
-          fillOpacity:0
-        },
-        {
-          offset:drawEnd/DURATION,
-          strokeDashoffset:0,
-          fillOpacity:0
-        },
-        {
-          offset:(drawEnd+80)/DURATION,
-          strokeDashoffset:0,
-          fillOpacity:1
-        },
-        {
-          offset:0.91,
-          strokeDashoffset:0,
-          fillOpacity:1
-        },
-        {
-          offset:1,
-          strokeDashoffset:length,
-          fillOpacity:0
-        }
-      ],{
-        duration:DURATION,
-        iterations:Infinity,
-        easing:"linear"
-      });
-
-      animations.push(anim);
+    letter.animate([
+      {
+        offset: 0,
+        strokeDashoffset: length,
+        fillOpacity: 0
+      },
+      {
+        offset: start / DURATION,
+        strokeDashoffset: length,
+        fillOpacity: 0
+      },
+      {
+        offset: end / DURATION,
+        strokeDashoffset: 0,
+        fillOpacity: 0
+      },
+      {
+        offset: (end + 60) / DURATION,
+        strokeDashoffset: 0,
+        fillOpacity: 1
+      },
+      {
+        offset: 0.90,
+        strokeDashoffset: 0,
+        fillOpacity: 1
+      },
+      {
+        offset: 1,
+        strokeDashoffset: length,
+        fillOpacity: 0
+      }
+    ], {
+      duration: DURATION,
+      iterations: Infinity,
+      easing: "linear"
     });
-  }
-
-  svg.replay=()=>{
-    animateLetters();
-  };
-
-  layout();
-
-  return svg;
+  });
 }
 
-const grid=document.getElementById("grid");
-
-FONTS.forEach((font,index)=>{
-  const card=document.createElement("div");
-  card.className="card";
-
-  const title=document.createElement("div");
-  title.className="card-top";
-  title.textContent=
-    `#${font.number} — ${font.name} (${font.weight})`;
-
-  const preview=document.createElement("div");
-  preview.className="preview";
-  const svg=makeSVG(font);
-  preview.appendChild(svg);
-
-  const controls=document.createElement("div");
-  controls.className="controls";
-
-  const label=document.createElement("small");
-  label.textContent="Auto writing • Fast";
-
-  const btn=document.createElement("button");
-  btn.textContent="View Splash";
-  btn.onclick=()=>openSplash(index);
-
-  controls.append(label,btn);
-  card.append(title,preview,controls);
-  grid.appendChild(card);
-});
-
-function openSplash(index){
-  const font=FONTS[index];
-  const container=document.getElementById("largePreview");
-
-  container.replaceChildren(makeSVG(font,true));
-
-  document.getElementById("largeLabel").textContent=
-    `#${font.number} — ${font.name} (${font.weight})`;
-
-  document.getElementById("fullscreen").classList.add("show");
-}
-
-function closeSplash(){
-  document.getElementById("fullscreen").classList.remove("show");
-  document.getElementById("largePreview").replaceChildren();
-}
-
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") closeSplash();
-});
+startSplash();
 </script>
 
 </body>
