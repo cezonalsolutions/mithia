@@ -1,17 +1,357 @@
+
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>METHAI — Writing Animation Studio</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><style>
-*{box-sizing:border-box}body{margin:0;background:#f4f5f8;font-family:Arial,sans-serif;color:#222}header{position:sticky;top:0;background:white;z-index:3;padding:15px;box-shadow:0 2px 12px #0001}h2{margin:0 0 7px;font-size:20px}p{margin:0 0 10px;color:#666;font-size:13px}.tools{display:flex;gap:8px;flex-wrap:wrap}input,select,button{border:1px solid #ddd;border-radius:9px;padding:10px;background:#fff}input{flex:1;min-width:160px}button{background:#242424;color:white;cursor:pointer}.grid{padding:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:#fff;border-radius:15px;padding:13px;min-width:0;cursor:pointer;border:2px solid transparent}.card:hover{border-color:#ff7b36}.meta{font:12px Arial;color:#888;display:flex;justify-content:space-between;gap:8px}.stage{height:110px;display:flex;align-items:center;justify-content:center;overflow:hidden}.word{font-size:clamp(28px,3.8vw,56px);white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;line-height:1.3;max-width:100%}.letter{display:inline-block;opacity:0;animation:write .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.13s)}.word[data-effect="pen"] .letter{clip-path:inset(0 100% 0 0);animation-name:pen}.word[data-effect="rise"] .letter{animation-name:rise}.word[data-effect="ink"] .letter{animation-name:ink}.word[data-effect="pop"] .letter{animation-name:pop}.word[data-effect="flip"] .letter{animation-name:flip}.word[data-effect="trace"] .letter{animation-name:trace}.word[data-effect="drop"] .letter{animation-name:drop}.word[data-effect="slide"] .letter{animation-name:slide}.word[data-effect="scale"] .letter{animation-name:scale}.word[data-effect="skew"] .letter{animation-name:skew}.word[data-effect="type"] .letter{animation-name:write}.word[data-effect="brush"] .letter{animation-name:brush}.word[data-effect="reveal"] .letter{animation-name:reveal}.word[data-effect="bounce"] .letter{animation-name:bounce}.word[data-effect="twist"] .letter{animation-name:twist}
-@keyframes write{from{opacity:0}to{opacity:1}}@keyframes pen{from{opacity:1;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0)}}@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}@keyframes ink{from{opacity:0;filter:blur(9px)}to{opacity:1;filter:blur(0)}}@keyframes pop{from{opacity:0;transform:scale(.1)}to{opacity:1;transform:scale(1)}}@keyframes flip{from{opacity:0;transform:rotateY(90deg)}to{opacity:1;transform:none}}@keyframes trace{from{opacity:0;-webkit-text-stroke:1px currentColor;color:transparent}60%{opacity:1;color:transparent}to{opacity:1;color:inherit}}@keyframes drop{from{opacity:0;transform:translateY(-28px)}to{opacity:1;transform:none}}@keyframes slide{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}@keyframes scale{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:none}}@keyframes skew{from{opacity:0;transform:skewX(-40deg)}to{opacity:1;transform:none}}@keyframes brush{from{opacity:0;clip-path:polygon(0 0,0 0,0 100%,0 100%)}to{opacity:1;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}@keyframes reveal{from{opacity:0;transform:translateY(10px) rotate(-10deg)}to{opacity:1;transform:none}}@keyframes bounce{0%{opacity:0;transform:translateY(-30px)}70%{opacity:1;transform:translateY(6px)}100%{opacity:1;transform:none}}@keyframes twist{from{opacity:0;transform:rotate(-70deg) scale(.5)}to{opacity:1;transform:none}}
-.name{text-align:center;font:12px Arial;color:#666}.overlay{position:fixed;inset:0;background:#0009;z-index:5;display:none;align-items:center;justify-content:center;padding:15px}.overlay.open{display:flex}.modal{background:white;border-radius:20px;width:min(650px,100%);padding:25px;text-align:center}.modal .stage{height:190px}.modal .word{font-size:clamp(42px,10vw,105px)}.modal button{margin:5px}.foot{font-size:12px;color:#777;padding:12px;text-align:center}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:9px;gap:9px}.stage{height:90px}.word{font-size:clamp(23px,6vw,39px)}}@media(prefers-reduced-motion:reduce){.letter{animation:none!important;opacity:1}}
-</style></head><body><header><h2>METHAI — Writing Animation Studio</h2><p>M → E → T → H → A → I • Auto-writing • Fast replay • Different fonts & colors</p><div class="tools"><input id="search" placeholder="Search font, number, effect"><select id="speed"><option value="0.65">Very Fast</option><option value="1" selected>Fast</option><option value="1.5">Normal</option></select><button id="replay">Replay All</button><button id="toggle">Pause</button></div></header><main class="grid" id="grid"></main><div class="foot" id="count"></div><div class="overlay" id="overlay"><div class="modal"><div id="detail"></div><div class="stage" id="large"></div><button id="again">Write Again</button><button id="close">Close</button></div></div><script>
-const fonts=['Fredoka','Baloo 2','Lilita One','Titan One','Paytone One','DynaPuff','Coiny','Chewy','Bubblegum Sans','Sniglet','Nunito','Poppins','Montserrat','Outfit','Quicksand','Rubik','DM Sans','Urbanist','Inter','Manrope','Sora','Lexend','Kanit','Barlow','Oswald','Anton','Archivo Black','Bungee','Bungee Inline','Russo One','Righteous','Passion One','Alfa Slab One','Patua One','Bree Serif','Comfortaa','Varela Round','Jost','Cabin','Mulish','Work Sans','Space Grotesk','Prompt','Signika','Exo 2','Rajdhani','Orbitron','Audiowide','Teko','Dosis','Pacifico','Lobster','Berkshire Swash','Courgette','Kaushan Script','Satisfy','Cookie','Dancing Script','Yellowtail','Permanent Marker','Kalam','Caveat','Patrick Hand','Indie Flower','Abril Fatface','Playfair Display','Cinzel','Fraunces','Unbounded','Syne','Krona One','Fugaz One','Monoton','Rubik Mono One','Rubik Bubbles','Rubik Moonrocks','Rubik Wet Paint','Bungee Spice','Modak','Chango','Luckiest Guy','Boogaloo','Carter One','Concert One','Acme','Rowdies','Knewave','Caprasimo','Bagel Fat One','Cherry Bomb One','Grandstander','Gabarito','Bricolage Grotesque','League Spartan','League Gothic','Archivo','Heebo','Fira Sans','Noto Serif','Ubuntu'];
-const effects=['pen','rise','ink','pop','flip','trace','drop','slide','scale','skew','type','brush','reveal','bounce','twist'];const colors=['#f06419','#e11d48','#7c3aed','#0f766e','#2563eb','#be123c','#b45309','#111827','#db2777','#0891b2','#4f46e5','#15803d'];const styles=fonts.flatMap((font,i)=>[400,700].map((weight,w)=>({font,weight,effect:effects[(i*2+w)%effects.length],color:colors[(i*3+w)%colors.length]})));const grid=document.getElementById('grid');const seen=new Set();let paused=false,selected=-1;const cards=[];
-function loadFont(f,w){const k=f+w;if(seen.has(k))return;seen.add(k);const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(f).replace(/%20/g,'+')+':wght@'+w+'&display=swap';document.head.appendChild(l)}
-function word(s){const el=document.createElement('div');el.className='word';el.dataset.effect=s.effect;el.style.fontFamily='"'+s.font+'",sans-serif';el.style.fontWeight=s.weight;el.style.color=s.color;for(let i=0;i<6;i++){const span=document.createElement('span');span.className='letter';span.style.setProperty('--i',i);span.textContent='METHAI'[i];el.appendChild(span)}return el}
-function play(el){if(paused)return;const speed=Number(document.getElementById('speed').value);el.style.animation='none';el.querySelectorAll('.letter').forEach(l=>{l.style.animation='none';void l.offsetWidth;l.style.animation='';l.style.animationDuration=(.42*speed)+'s';l.style.animationDelay=(Number(l.style.getPropertyValue('--i'))*.13*speed)+'s'});}
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{const c=e.target;const i=Number(c.dataset.i);if(e.isIntersecting){loadFont(styles[i].font,styles[i].weight);if(!paused){play(c.querySelector('.word'));clearInterval(c._loop);c._loop=setInterval(()=>{if(!paused && c.isConnected && c.getBoundingClientRect().bottom>0 && c.getBoundingClientRect().top<innerHeight)play(c.querySelector('.word'))},2400*Number(document.getElementById('speed').value))}}else clearInterval(c._loop)})},{rootMargin:'100px'});
-styles.forEach((s,i)=>{const c=document.createElement('article');c.className='card';c.dataset.i=i;c.innerHTML='<div class="meta"><span>#'+(i+1)+'</span><span>'+s.effect+'</span></div>';const st=document.createElement('div');st.className='stage';st.appendChild(word(s));c.appendChild(st);const name=document.createElement('div');name.className='name';name.textContent=s.font+' · '+s.weight;c.appendChild(name);c.onclick=()=>openPreview(i);grid.appendChild(c);cards.push(c);obs.observe(c)});
-function filter(){const q=document.getElementById('search').value.toLowerCase().trim();let n=0;cards.forEach((c,i)=>{const s=styles[i];const yes=s.font.toLowerCase().includes(q)||s.effect.includes(q)||String(i+1)===q;c.style.display=yes?'':'none';if(yes){n++;obs.observe(c)}else clearInterval(c._loop)});document.getElementById('count').textContent=n+' of '+styles.length+' styles'}
-function openPreview(i){selected=i;const s=styles[i];loadFont(s.font,s.weight);document.getElementById('detail').textContent='#'+(i+1)+' · '+s.font+' · '+s.effect;const large=document.getElementById('large');large.replaceChildren(word(s));document.getElementById('overlay').classList.add('open');play(large.querySelector('.word'))}
-document.getElementById('search').oninput=filter;document.getElementById('replay').onclick=()=>cards.filter(c=>c.style.display!=='none').forEach(c=>play(c.querySelector('.word')));document.getElementById('toggle').onclick=e=>{paused=!paused;e.target.textContent=paused?'Play':'Pause';cards.forEach(c=>{if(paused){clearInterval(c._loop);c.querySelectorAll('.letter').forEach(l=>l.style.animationPlayState='paused')}else{c.querySelectorAll('.letter').forEach(l=>l.style.animationPlayState='running');obs.observe(c)}})};document.getElementById('speed').onchange=()=>{cards.forEach(c=>{clearInterval(c._loop);obs.observe(c)});if(selected>=0)openPreview(selected)};document.getElementById('again').onclick=()=>{if(selected>=0)openPreview(selected)};document.getElementById('close').onclick=()=>document.getElementById('overlay').classList.remove('open');document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')e.currentTarget.classList.remove('open')};filter();
-</script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>METHAI Writing Splash Studio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Kalam:wght@400;700&family=Concert+One&family=Itim&family=Bagel+Fat+One&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#f7f7f7;
+  color:#222;
+  font-family:Arial,sans-serif;
+}
+header{
+  text-align:center;
+  padding:28px 15px 12px;
+}
+header h1{
+  margin:0 0 8px;
+  font-size:25px;
+}
+header p{
+  margin:0;
+  color:#777;
+  font-size:13px;
+}
+.grid{
+  max-width:1100px;
+  margin:25px auto;
+  padding:0 15px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px;
+}
+.card{
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 5px 20px #0000000a;
+}
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:bold;
+}
+.preview{
+  height:175px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+.preview svg{
+  width:100%;
+  max-width:450px;
+  overflow:visible;
+}
+button{
+  border:0;
+  background:#ff6500;
+  color:white;
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.controls{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+small{color:#888}
+.fullscreen{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:white;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.fullscreen.show{display:flex}
+.fullscreen svg{
+  width:min(94vw,900px);
+  overflow:visible;
+}
+.close{
+  position:absolute;
+  top:25px;
+  right:25px;
+}
+.fullscreen .font-label{
+  position:absolute;
+  bottom:35px;
+  color:#777;
+  font-size:14px;
+}
+@media(max-width:650px){
+  .grid{grid-template-columns:1fr}
+  .preview{height:145px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>METHAI — Writing Splash Studio</h1>
+  <p>6 fonts • Letter-by-letter SVG outline drawing • Auto replay</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="fullscreen" id="fullscreen">
+  <button class="close" onclick="closeSplash()">✕ Close</button>
+  <div id="largePreview" style="width:100%;display:flex;justify-content:center"></div>
+  <div class="font-label" id="largeLabel"></div>
+</div>
+
+<script>
+const FONTS = [
+  {
+    number:75,
+    name:"Righteous",
+    weight:400,
+    color:"#ff6500"
+  },
+  {
+    number:233,
+    name:"Kalam",
+    weight:400,
+    color:"#e82b65"
+  },
+  {
+    number:234,
+    name:"Kalam",
+    weight:700,
+    color:"#0caa7c"
+  },
+  {
+    number:386,
+    name:"Concert One",
+    weight:700,
+    color:"#7646d9"
+  },
+  {
+    number:400,
+    name:"Itim",
+    weight:700,
+    color:"#007bdb"
+  },
+  {
+    number:412,
+    name:"Bagel Fat One",
+    weight:700,
+    color:"#ed9400"
+  }
+];
+
+const WORD = "METHAI";
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+const DURATION = 2900;
+const LETTER_START = 100;
+const LETTER_STEP = 340;
+const DRAW_TIME = 390;
+
+function makeSVG(font,large=false){
+  const svg = document.createElementNS(SVG_NS,"svg");
+  svg.setAttribute("viewBox","0 0 800 210");
+  svg.setAttribute("role","img");
+  svg.setAttribute("aria-label","METHAI");
+
+  const letters = [];
+  const group = document.createElementNS(SVG_NS,"g");
+
+  svg.appendChild(group);
+
+  for(let i=0;i<WORD.length;i++){
+    const letter = document.createElementNS(SVG_NS,"text");
+
+    letter.textContent = WORD[i];
+    letter.setAttribute("x","0");
+    letter.setAttribute("y","143");
+    letter.setAttribute("font-family",font.name);
+    letter.setAttribute("font-size","125");
+    letter.setAttribute("font-weight",font.weight);
+    letter.setAttribute("fill",font.color);
+    letter.setAttribute("stroke",font.color);
+    letter.setAttribute("stroke-width","2.5");
+    letter.setAttribute("stroke-linejoin","round");
+    letter.setAttribute("paint-order","stroke fill");
+
+    group.appendChild(letter);
+    letters.push(letter);
+  }
+
+  async function layout(){
+    try {
+      await document.fonts.load(
+        `${font.weight} 125px "${font.name}"`,
+        WORD
+      );
+    } catch(e){}
+
+    let cursor = 0;
+    for(const letter of letters){
+      letter.setAttribute("x",cursor);
+      cursor += letter.getComputedTextLength() + 4;
+    }
+
+    const scale = Math.min(1,720/cursor);
+    const offset = (800-cursor*scale)/2;
+
+    group.setAttribute(
+      "transform",
+      `translate(${offset} 0) scale(${scale} 1)`
+    );
+
+    animateLetters();
+  }
+
+  let animations=[];
+
+  function animateLetters(){
+    animations.forEach(a=>a.cancel());
+    animations=[];
+
+    letters.forEach((letter,i)=>{
+      const length = Math.max(
+        700,
+        letter.getComputedTextLength()*8
+      );
+
+      letter.style.strokeDasharray = length;
+      letter.style.strokeDashoffset = length;
+      letter.style.fillOpacity = 0;
+
+      const start = LETTER_START+i*LETTER_STEP;
+      const drawEnd = start+DRAW_TIME;
+
+      const anim=letter.animate([
+        {
+          offset:0,
+          strokeDashoffset:length,
+          fillOpacity:0
+        },
+        {
+          offset:start/DURATION,
+          strokeDashoffset:length,
+          fillOpacity:0
+        },
+        {
+          offset:drawEnd/DURATION,
+          strokeDashoffset:0,
+          fillOpacity:0
+        },
+        {
+          offset:(drawEnd+80)/DURATION,
+          strokeDashoffset:0,
+          fillOpacity:1
+        },
+        {
+          offset:0.91,
+          strokeDashoffset:0,
+          fillOpacity:1
+        },
+        {
+          offset:1,
+          strokeDashoffset:length,
+          fillOpacity:0
+        }
+      ],{
+        duration:DURATION,
+        iterations:Infinity,
+        easing:"linear"
+      });
+
+      animations.push(anim);
+    });
+  }
+
+  svg.replay=()=>{
+    animateLetters();
+  };
+
+  layout();
+
+  return svg;
+}
+
+const grid=document.getElementById("grid");
+
+FONTS.forEach((font,index)=>{
+  const card=document.createElement("div");
+  card.className="card";
+
+  const title=document.createElement("div");
+  title.className="card-top";
+  title.textContent=
+    `#${font.number} — ${font.name} (${font.weight})`;
+
+  const preview=document.createElement("div");
+  preview.className="preview";
+  const svg=makeSVG(font);
+  preview.appendChild(svg);
+
+  const controls=document.createElement("div");
+  controls.className="controls";
+
+  const label=document.createElement("small");
+  label.textContent="Auto writing • Fast";
+
+  const btn=document.createElement("button");
+  btn.textContent="View Splash";
+  btn.onclick=()=>openSplash(index);
+
+  controls.append(label,btn);
+  card.append(title,preview,controls);
+  grid.appendChild(card);
+});
+
+function openSplash(index){
+  const font=FONTS[index];
+  const container=document.getElementById("largePreview");
+
+  container.replaceChildren(makeSVG(font,true));
+
+  document.getElementById("largeLabel").textContent=
+    `#${font.number} — ${font.name} (${font.weight})`;
+
+  document.getElementById("fullscreen").classList.add("show");
+}
+
+function closeSplash(){
+  document.getElementById("fullscreen").classList.remove("show");
+  document.getElementById("largePreview").replaceChildren();
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeSplash();
+});
+</script>
+
+</body>
+</html>
