@@ -4,235 +4,378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>METHAI - Font Studio</title>
+<title>METHAI — Font & Animation Studio</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --accent:#ff6500;
 }
 
-body {
-  background: #f5f6fa;
-  color: #202124;
-  font-family: Arial, sans-serif;
-  padding-bottom: 30px;
+body{
+  background:#f5f6fa;
+  font-family:Arial,sans-serif;
+  color:#202124;
 }
 
-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #ffffff;
-  padding: 16px 20px;
-  box-shadow: 0 3px 15px #00000010;
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#fff;
+  padding:16px 20px;
+  box-shadow:0 3px 15px #00000012;
 }
 
-header h2 {
-  font-size: 21px;
-  margin-bottom: 5px;
+header h2{
+  font-size:21px;
+  margin-bottom:5px;
 }
 
-.subtitle {
-  color: #777;
-  font-size: 13px;
-  margin-bottom: 14px;
+.subtitle{
+  font-size:13px;
+  color:#777;
+  margin-bottom:12px;
 }
 
-.search {
-  width: 100%;
-  border: 1px solid #e2e2e2;
-  background: #f8f8f8;
-  border-radius: 12px;
-  padding: 13px 15px;
-  font-size: 15px;
-  outline: none;
+.search{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+  outline:none;
 }
 
-.search:focus {
-  border-color: #8b5cf6;
-  background: #fff;
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
 }
 
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 12px;
+.count{
+  color:#777;
+  font-size:13px;
 }
 
-.count {
-  font-size: 13px;
-  color: #777;
+.btn{
+  background:#202124;
+  color:#fff;
+  border:0;
+  border-radius:9px;
+  padding:10px 14px;
+  cursor:pointer;
 }
 
-.shuffle-btn {
-  background: #202124;
-  border: none;
-  color: white;
-  padding: 9px 14px;
-  border-radius: 9px;
-  cursor: pointer;
-  font-size: 12px;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  padding:18px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  padding: 18px;
+.font-card{
+  background:#fff;
+  border:2px solid transparent;
+  border-radius:18px;
+  padding:14px;
+  min-height:175px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  overflow:hidden;
+  transition:box-shadow .2s;
 }
 
-.font-card {
-  background: #ffffff;
-  border: 2px solid transparent;
-  border-radius: 18px;
-  min-height: 155px;
-  padding: 15px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  transition: transform .2s, box-shadow .2s;
+.font-card:hover{
+  box-shadow:0 8px 24px #00000015;
 }
 
-.font-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 7px 22px #00000012;
+.font-card.selected{
+  border-color:var(--accent);
 }
 
-.font-card.selected {
-  border-color: #8b5cf6;
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11px;
+  color:#888;
 }
 
-.font-number {
-  color: #999;
-  font-size: 12px;
-  font-family: Arial, sans-serif;
+.preview-stage{
+  height:85px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  perspective:700px;
 }
 
-.font-preview {
-  font-size: clamp(25px, 3.3vw, 50px);
-  line-height: 1.3;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
+.font-preview{
+  display:inline-block;
+  font-size:clamp(25px,3.2vw,47px);
+  white-space:nowrap;
+  line-height:1.3;
+  transform-origin:center;
+  will-change:transform,opacity;
 }
 
-.font-name {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  color: #777;
-  text-align: center;
+.font-name{
+  text-align:center;
+  font-size:12px;
+  color:#555;
 }
 
-.selected-panel {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: #00000099;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
+.animation-name{
+  text-align:center;
+  font-size:11px;
+  color:#999;
+  margin-top:4px;
 }
 
-.selected-panel.show {
-  display: flex;
+/* ===== 30 UNIQUE ANIMATIONS ===== */
+
+@keyframes a1{
+  from{opacity:0;transform:translateY(45px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes a2{
+  from{opacity:0;transform:translateY(-45px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes a3{
+  from{opacity:0;transform:translateX(-70px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes a4{
+  from{opacity:0;transform:translateX(70px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes a5{
+  from{opacity:0;transform:scale(.2)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes a6{
+  from{opacity:0;transform:scale(1.7)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes a7{
+  from{opacity:0;transform:rotate(-25deg) scale(.6)}
+  to{opacity:1;transform:rotate(0) scale(1)}
+}
+@keyframes a8{
+  from{opacity:0;transform:rotate(25deg) scale(.6)}
+  to{opacity:1;transform:rotate(0) scale(1)}
+}
+@keyframes a9{
+  0%{transform:scaleY(.05);opacity:0}
+  65%{transform:scaleY(1.2);opacity:1}
+  100%{transform:scaleY(1)}
+}
+@keyframes a10{
+  0%{transform:scaleX(.05);opacity:0}
+  65%{transform:scaleX(1.15);opacity:1}
+  100%{transform:scaleX(1)}
+}
+@keyframes a11{
+  0%{opacity:0;filter:blur(15px)}
+  100%{opacity:1;filter:blur(0)}
+}
+@keyframes a12{
+  0%{opacity:0;letter-spacing:20px}
+  100%{opacity:1;letter-spacing:0}
+}
+@keyframes a13{
+  0%{opacity:0;letter-spacing:-12px}
+  100%{opacity:1;letter-spacing:0}
+}
+@keyframes a14{
+  0%{opacity:0;transform:rotateX(90deg)}
+  100%{opacity:1;transform:rotateX(0)}
+}
+@keyframes a15{
+  0%{opacity:0;transform:rotateY(90deg)}
+  100%{opacity:1;transform:rotateY(0)}
+}
+@keyframes a16{
+  0%{opacity:0;transform:skewX(-35deg)}
+  100%{opacity:1;transform:skewX(0)}
+}
+@keyframes a17{
+  0%{opacity:0;transform:skewY(25deg)}
+  100%{opacity:1;transform:skewY(0)}
+}
+@keyframes a18{
+  0%{opacity:0;clip-path:inset(0 100% 0 0)}
+  100%{opacity:1;clip-path:inset(0 0 0 0)}
+}
+@keyframes a19{
+  0%{opacity:0;clip-path:inset(0 0 0 100%)}
+  100%{opacity:1;clip-path:inset(0 0 0 0)}
+}
+@keyframes a20{
+  0%{opacity:0;clip-path:inset(100% 0 0 0)}
+  100%{opacity:1;clip-path:inset(0 0 0 0)}
+}
+@keyframes a21{
+  0%{opacity:0;clip-path:circle(0% at 50% 50%)}
+  100%{opacity:1;clip-path:circle(100% at 50% 50%)}
+}
+@keyframes a22{
+  0%{opacity:0;transform:translateY(70px) rotate(-15deg)}
+  100%{opacity:1;transform:translateY(0) rotate(0)}
+}
+@keyframes a23{
+  0%{opacity:0;transform:translateY(-70px) rotate(15deg)}
+  100%{opacity:1;transform:translateY(0) rotate(0)}
+}
+@keyframes a24{
+  0%{opacity:0;transform:scale(.3) rotate(-180deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes a25{
+  0%{opacity:0;transform:scale(.3) rotate(180deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes a26{
+  0%{opacity:0;transform:translateX(-80px) scale(.4)}
+  100%{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes a27{
+  0%{opacity:0;transform:translateX(80px) scale(.4)}
+  100%{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes a28{
+  0%{opacity:0;transform:rotateZ(-12deg) scaleY(.2)}
+  100%{opacity:1;transform:rotateZ(0) scaleY(1)}
+}
+@keyframes a29{
+  0%{opacity:0;filter:brightness(3);transform:scale(1.3)}
+  100%{opacity:1;filter:brightness(1);transform:scale(1)}
+}
+@keyframes a30{
+  0%{opacity:0;transform:perspective(400px) translateZ(-250px)}
+  100%{opacity:1;transform:perspective(400px) translateZ(0)}
 }
 
-.preview-box {
-  width: 100%;
-  max-width: 650px;
-  background: white;
-  border-radius: 24px;
-  padding: 35px 20px;
-  text-align: center;
-  position: relative;
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#0009;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
 }
 
-.close-icon {
-  position: absolute;
-  right: 15px;
-  top: 12px;
-  border: none;
-  background: #f1f1f1;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 19px;
+.modal.show{display:flex}
+
+.modal-box{
+  position:relative;
+  width:100%;
+  max-width:650px;
+  background:white;
+  border-radius:22px;
+  padding:30px 20px;
+  text-align:center;
 }
 
-#selectedLogo {
-  font-size: clamp(45px, 10vw, 105px);
-  line-height: 1.3;
-  margin: 25px 0 10px;
-  white-space: nowrap;
-  overflow: hidden;
+.modal-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:35px;
+  height:35px;
+  border:0;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:20px;
 }
 
-#selectedName {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 20px;
+.big-stage{
+  min-height:150px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  perspective:800px;
 }
 
-.color-row {
-  display: flex;
-  justify-content: center;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+#bigLogo{
+  font-size:clamp(45px,10vw,100px);
+  line-height:1.3;
+  white-space:nowrap;
+  display:inline-block;
 }
 
-.color-dot {
-  width: 29px;
-  height: 29px;
-  border: 2px solid #e5e5e5;
-  border-radius: 50%;
-  cursor: pointer;
+#selectedInfo{
+  color:#666;
+  font-size:13px;
+  margin-bottom:15px;
 }
 
-.close-btn {
-  background: #202124;
-  border: none;
-  color: white;
-  padding: 12px 28px;
-  border-radius: 10px;
-  cursor: pointer;
+.color-row{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:15px;
 }
 
-@media(max-width: 850px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    padding: 10px;
+.color-dot{
+  width:28px;
+  height:28px;
+  border:2px solid #ddd;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.speed-row{
+  margin:12px 0;
+  font-size:13px;
+  color:#666;
+}
+
+.speed-row input{
+  width:180px;
+  vertical-align:middle;
+}
+
+@media(max-width:850px){
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    padding:10px;
+    gap:10px;
   }
-
-  .font-card {
-    min-height: 130px;
-    padding: 11px;
+  .font-card{
+    min-height:155px;
+    padding:10px;
   }
-
-  .font-preview {
-    font-size: clamp(24px, 6vw, 40px);
+  .font-preview{
+    font-size:clamp(23px,5.8vw,38px);
   }
-
-  header {
-    padding: 13px;
-  }
+  header{padding:12px}
 }
 
-@media(max-width: 370px) {
-  .font-preview {
-    font-size: 23px;
+@media(prefers-reduced-motion:reduce){
+  .font-preview,#bigLogo{
+    animation:none!important;
   }
 }
 </style>
@@ -241,428 +384,285 @@ header h2 {
 <body>
 
 <header>
-  <h2>METHAI — Font Studio</h2>
+  <h2>METHAI — Font & Animation Studio</h2>
   <div class="subtitle">
-    Explore fonts, colors and logo styles
+    Unique fonts • Colors • 30 animation effects
   </div>
 
   <input
     class="search"
     id="search"
-    placeholder="Search font name or number..."
-    oninput="filterFonts()"
+    placeholder="Search font name, number or animation..."
   >
 
   <div class="toolbar">
-    <div class="count" id="count"></div>
-    <button class="shuffle-btn" onclick="shuffleColors()">
-      Change All Colors
+    <span class="count" id="count"></span>
+    <button class="btn" id="shuffleBtn">
+      Change Colors
     </button>
   </div>
 </header>
 
 <div class="grid" id="fontGrid"></div>
 
-<div class="selected-panel" id="selectedPanel">
-  <div class="preview-box">
-    <button class="close-icon" onclick="closePreview()">
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeIcon">
       &times;
     </button>
 
-    <div id="selectedLogo">METHAI</div>
-    <div id="selectedName"></div>
+    <div class="big-stage">
+      <div id="bigLogo">METHAI</div>
+    </div>
+
+    <div id="selectedInfo"></div>
 
     <div class="color-row" id="colorRow"></div>
 
-    <button class="close-btn" onclick="closePreview()">
-      Back to Fonts
-    </button>
+    <div class="speed-row">
+      Animation speed:
+      <input
+        id="speed"
+        type="range"
+        min="0.4"
+        max="3"
+        step="0.1"
+        value="1.2"
+      >
+      <span id="speedValue">1.2s</span>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="replayBtn">
+        Replay Animation
+      </button>
+      <button class="btn" id="closeBtn">
+        Back to Fonts
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
 const families = [
-  "Fredoka",
-  "Baloo 2",
-  "Lilita One",
-  "Titan One",
-  "Paytone One",
-  "DynaPuff",
-  "Coiny",
-  "Chewy",
-  "Bubblegum Sans",
-  "Sniglet",
-  "Nunito",
-  "Nunito Sans",
-  "Poppins",
-  "Montserrat",
-  "Outfit",
-  "Quicksand",
-  "Rubik",
-  "DM Sans",
-  "Plus Jakarta Sans",
-  "Urbanist",
-  "Inter",
-  "Manrope",
-  "Sora",
-  "Lexend",
-  "Kanit",
-  "Barlow",
-  "Barlow Condensed",
-  "Oswald",
-  "Anton",
-  "Archivo Black",
-  "Bungee",
-  "Bungee Shade",
-  "Bungee Inline",
-  "Bungee Outline",
-  "Bungee Hairline",
-  "Black Ops One",
-  "Russo One",
-  "Righteous",
-  "Bowlby One SC",
-  "Bowlby One",
-  "Passion One",
-  "Alfa Slab One",
-  "Bevan",
-  "Patua One",
-  "Bree Serif",
-  "Roboto Slab",
-  "Arvo",
-  "Zilla Slab",
-  "Crete Round",
-  "Josefin Slab",
-  "Josefin Sans",
-  "Comfortaa",
-  "Varela Round",
-  "M PLUS Rounded 1c",
-  "M PLUS 1p",
-  "M PLUS 2",
-  "Jost",
-  "Cabin",
-  "Asap",
-  "Hind",
-  "Hind Madurai",
-  "Mulish",
-  "Work Sans",
-  "Figtree",
-  "Onest",
-  "Red Hat Display",
-  "Red Hat Text",
-  "Public Sans",
-  "IBM Plex Sans",
-  "IBM Plex Mono",
-  "Space Grotesk",
-  "Space Mono",
-  "Chivo",
-  "Chivo Mono",
-  "Prompt",
-  "Signika",
-  "Signika Negative",
-  "Exo 2",
-  "Exo",
-  "Rajdhani",
-  "Orbitron",
-  "Audiowide",
-  "Michroma",
-  "Teko",
-  "Chakra Petch",
-  "Saira",
-  "Saira Condensed",
-  "Saira Semi Condensed",
-  "Saira Extra Condensed",
-  "Fjalla One",
-  "Abel",
-  "Dosis",
-  "Catamaran",
-  "Karla",
-  "Lato",
-  "Open Sans",
-  "Roboto",
-  "Roboto Condensed",
-  "Noto Sans",
-  "Ubuntu",
-
-  // Additional fonts
-  "Pacifico",
-  "Lobster",
-  "Lobster Two",
-  "Berkshire Swash",
-  "Courgette",
-  "Kaushan Script",
-  "Satisfy",
-  "Cookie",
-  "Sacramento",
-  "Dancing Script",
-  "Great Vibes",
-  "Parisienne",
-  "Allura",
-  "Alex Brush",
-  "Yellowtail",
-  "Permanent Marker",
-  "Kalam",
-  "Caveat",
-  "Patrick Hand",
-  "Indie Flower",
-  "Shadows Into Light",
-  "Gloria Hallelujah",
-  "Amatic SC",
-  "Coming Soon",
-  "Handlee",
-  "Architects Daughter",
-  "Rock Salt",
-  "Fredericka the Great",
-  "Special Elite",
-  "Rye",
-  "Abril Fatface",
-  "Playfair Display",
-  "DM Serif Display",
-  "DM Serif Text",
-  "Cormorant Garamond",
-  "Cinzel",
-  "Cinzel Decorative",
-  "Prata",
-  "Yeseva One",
-  "Vidaloka",
-  "Bodoni Moda",
-  "Libre Baskerville",
-  "Merriweather",
-  "Lora",
-  "Fraunces",
-  "Gloock",
-  "Unbounded",
-  "Syne",
-  "Syne Mono",
-  "Space Grotesk",
-  "Krona One",
-  "Rammetto One",
-  "Fugaz One",
-  "Faster One",
-  "Monoton",
-  "Rubik Mono One",
-  "Rubik Glitch",
-  "Rubik Wet Paint",
-  "Rubik Puddles",
-  "Rubik Bubbles",
-  "Rubik Moonrocks",
-  "Rubik Spray Paint",
-  "Rubik Dirt",
-  "Rubik Vinyl",
-  "Rubik Burned",
-  "Rubik Pixels",
-  "Rubik Maze",
-  "Rubik Microbe",
-  "Rubik Beastly",
-  "Rubik Gemstones",
-  "Rubik Iso",
-  "Rubik Marker Hatch",
-  "Rubik Scribble",
-  "Rubik Storm",
-  "Rubik Distressed",
-  "Rubik Doodle Shadow",
-  "Rubik Doodle Triangles",
-  "Rubik Maps",
-  "Rubik Broken Fax",
-  "Rubik Lines",
-  "Rubik 80s Fade",
-  "Rubik Dirt",
-  "Bungee Spice",
-  "Bungee Tint",
-  "Bungee",
-  "Oi",
-  "Modak",
-  "Chango",
-  "Skranji",
-  "Skranji Bold",
-  "Luckiest Guy",
-  "Boogaloo",
-  "Carter One",
-  "Fascinate",
-  "Fascinate Inline",
-  "Faster One",
-  "Concert One",
-  "Acme",
-  "Mochiy Pop One",
-  "Mochiy Pop P One",
-  "Rowdies",
-  "Secular One",
-  "Mitr",
-  "Itim",
-  "Sriracha",
-  "Knewave",
-  "Kavoon",
-  "Wendy One",
-  "Caprasimo",
-  "Bagel Fat One",
-  "Climate Crisis",
-  "Cherry Bomb One",
-  "Grandstander",
-  "Gabarito",
-  "Bricolage Grotesque",
-  "Young Serif",
-  "Rethink Sans",
-  "Faculty Glyphic",
-  "Instrument Sans",
-  "Instrument Serif",
-  "Anybody",
-  "Alata",
-  "Sen",
-  "Questrial",
-  "Tenor Sans",
-  "Poiret One",
-  "Julius Sans One",
-  "Marcellus",
-  "Forum",
-  "Belleza",
-  "Gruppo",
-  "Syncopate",
-  "Alegreya Sans SC",
-  "League Spartan",
-  "League Gothic",
-  "Archivo Narrow",
-  "Archivo",
-  "Encode Sans",
-  "Encode Sans Condensed",
-  "Encode Sans Expanded",
-  "Heebo",
-  "Assistant",
-  "Fira Sans",
-  "Fira Sans Condensed",
-  "Fira Sans Extra Condensed",
-  "Fira Code",
-  "Inconsolata",
-  "Anonymous Pro",
-  "Source Sans 3",
-  "Source Serif 4",
-  "Noto Serif",
-  "Noto Serif Display",
-  "PT Sans",
-  "PT Sans Narrow",
-  "PT Serif",
-  "Arimo",
-  "Tinos",
-  "Cousine"
+"Fredoka","Baloo 2","Lilita One","Titan One",
+"Paytone One","DynaPuff","Coiny","Chewy",
+"Bubblegum Sans","Sniglet","Nunito","Nunito Sans",
+"Poppins","Montserrat","Outfit","Quicksand",
+"Rubik","DM Sans","Plus Jakarta Sans","Urbanist",
+"Inter","Manrope","Sora","Lexend","Kanit",
+"Barlow","Barlow Condensed","Oswald","Anton",
+"Archivo Black","Bungee","Bungee Shade",
+"Bungee Inline","Bungee Outline","Bungee Hairline",
+"Black Ops One","Russo One","Righteous",
+"Bowlby One SC","Bowlby One","Passion One",
+"Alfa Slab One","Bevan","Patua One","Bree Serif",
+"Roboto Slab","Arvo","Zilla Slab","Crete Round",
+"Josefin Slab","Josefin Sans","Comfortaa",
+"Varela Round","M PLUS Rounded 1c","M PLUS 1p",
+"M PLUS 2","Jost","Cabin","Asap","Hind",
+"Mulish","Work Sans","Figtree","Onest",
+"Red Hat Display","Red Hat Text","Public Sans",
+"IBM Plex Sans","IBM Plex Mono","Space Grotesk",
+"Space Mono","Chivo","Chivo Mono","Prompt",
+"Signika","Signika Negative","Exo 2","Exo",
+"Rajdhani","Orbitron","Audiowide","Michroma",
+"Teko","Chakra Petch","Saira","Saira Condensed",
+"Fjalla One","Abel","Dosis","Catamaran",
+"Karla","Lato","Open Sans","Roboto",
+"Roboto Condensed","Noto Sans","Ubuntu",
+"Pacifico","Lobster","Lobster Two",
+"Berkshire Swash","Courgette","Kaushan Script",
+"Satisfy","Cookie","Sacramento","Dancing Script",
+"Great Vibes","Parisienne","Allura","Alex Brush",
+"Yellowtail","Permanent Marker","Kalam",
+"Caveat","Patrick Hand","Indie Flower",
+"Shadows Into Light","Gloria Hallelujah",
+"Amatic SC","Coming Soon","Handlee",
+"Architects Daughter","Rock Salt",
+"Fredericka the Great","Special Elite","Rye",
+"Abril Fatface","Playfair Display",
+"DM Serif Display","DM Serif Text",
+"Cormorant Garamond","Cinzel","Cinzel Decorative",
+"Prata","Yeseva One","Vidaloka","Bodoni Moda",
+"Libre Baskerville","Merriweather","Lora",
+"Fraunces","Gloock","Unbounded","Syne",
+"Syne Mono","Krona One","Rammetto One",
+"Fugaz One","Faster One","Monoton",
+"Rubik Mono One","Rubik Glitch","Rubik Wet Paint",
+"Rubik Puddles","Rubik Bubbles","Rubik Moonrocks",
+"Rubik Spray Paint","Rubik Dirt","Rubik Vinyl",
+"Rubik Burned","Rubik Pixels","Rubik Maze",
+"Rubik Microbe","Rubik Beastly","Rubik Gemstones",
+"Rubik Iso","Rubik Marker Hatch","Rubik Scribble",
+"Rubik Storm","Rubik Distressed",
+"Rubik Doodle Shadow","Rubik Doodle Triangles",
+"Rubik Maps","Rubik Broken Fax","Rubik Lines",
+"Rubik 80s Fade","Bungee Spice","Bungee Tint",
+"Oi","Modak","Chango","Skranji",
+"Luckiest Guy","Boogaloo","Carter One",
+"Fascinate","Fascinate Inline","Concert One",
+"Acme","Mochiy Pop One","Mochiy Pop P One",
+"Rowdies","Secular One","Mitr","Itim",
+"Sriracha","Knewave","Kavoon","Wendy One",
+"Caprasimo","Bagel Fat One","Climate Crisis",
+"Cherry Bomb One","Grandstander","Gabarito",
+"Bricolage Grotesque","Young Serif",
+"Rethink Sans","Instrument Sans",
+"Instrument Serif","Anybody","Alata","Sen",
+"Questrial","Tenor Sans","Poiret One",
+"Julius Sans One","Marcellus","Forum",
+"Belleza","Gruppo","Syncopate",
+"League Spartan","League Gothic",
+"Archivo Narrow","Archivo","Encode Sans",
+"Encode Sans Condensed","Encode Sans Expanded",
+"Heebo","Assistant","Fira Sans",
+"Fira Sans Condensed","Fira Code","Inconsolata",
+"Anonymous Pro","Source Sans 3",
+"Source Serif 4","Noto Serif",
+"Noto Serif Display","PT Sans","PT Sans Narrow",
+"PT Serif","Arimo","Tinos","Cousine"
 ];
 
-const weights = [400, 700];
+const animationNames = [
+"Rise Up","Drop Down","Slide Left","Slide Right",
+"Zoom In","Zoom Out","Rotate Left","Rotate Right",
+"Vertical Stretch","Horizontal Stretch","Blur Reveal",
+"Letter Spread","Letter Compress","Flip X","Flip Y",
+"Skew X","Skew Y","Wipe Right","Wipe Left",
+"Top Reveal","Circle Reveal","Swing Up",
+"Swing Down","Spin In Left","Spin In Right",
+"Left Zoom","Right Zoom","Tilt Stretch",
+"Flash Zoom","3D Depth"
+];
+
+const colors = [
+"#ff6500","#e63946","#ff006e","#8338ec",
+"#3a0ca3","#4361ee","#0077b6","#0096c7",
+"#008f5a","#00a86b","#2d6a4f","#d97706",
+"#f72585","#7209b7","#1d3557","#111827",
+"#dc2626","#7c3aed","#0891b2","#ca8a04",
+"#be123c","#0f766e","#b45309","#6d28d9"
+];
 
 const styles = [];
 
-[...new Set(families)].forEach(family => {
-  weights.forEach(weight => {
-    styles.push({ family, weight });
+[...new Set(families)].forEach((family, i) => {
+  [400,700].forEach((weight, w) => {
+    const index = styles.length;
+    styles.push({
+      family,
+      weight,
+      animation: index % animationNames.length,
+      color: colors[(index * 7) % colors.length]
+    });
   });
 });
 
-const colors = [
-  "#ff6500",
-  "#e63946",
-  "#ff006e",
-  "#8338ec",
-  "#3a0ca3",
-  "#4361ee",
-  "#0077b6",
-  "#0096c7",
-  "#008f5a",
-  "#00a86b",
-  "#2d6a4f",
-  "#d97706",
-  "#f72585",
-  "#7209b7",
-  "#1d3557",
-  "#111827",
-  "#dc2626",
-  "#7c3aed",
-  "#0891b2",
-  "#ca8a04",
-  "#be123c",
-  "#0f766e",
-  "#b45309",
-  "#6d28d9"
-];
-
 const grid = document.getElementById("fontGrid");
+const modal = document.getElementById("modal");
+const bigLogo = document.getElementById("bigLogo");
+const selectedInfo = document.getElementById("selectedInfo");
 const loadedFonts = new Set();
 
-let colorOffset = 0;
 let selectedIndex = -1;
+let colorOffset = 0;
+let animationSpeed = 1.2;
 
-function getColor(index) {
-  return colors[(index + colorOffset) % colors.length];
-}
-
-function loadFont(family, weight) {
+function loadFont(family, weight){
   const key = family + "-" + weight;
+  if(loadedFonts.has(key)) return;
 
-  if (loadedFonts.has(key)) return;
   loadedFonts.add(key);
 
   const link = document.createElement("link");
   link.rel = "stylesheet";
 
-  const familyParam =
-    encodeURIComponent(family).replace(/%20/g, "+");
-
   link.href =
     "https://fonts.googleapis.com/css2?family=" +
-    familyParam +
-    ":wght@" + weight +
-    "&display=swap";
+    encodeURIComponent(family).replace(/%20/g,"+") +
+    ":wght@" + weight + "&display=swap";
 
-  link.onerror = () => {
-    loadedFonts.delete(key);
-  };
-
+  link.onerror = () => loadedFonts.delete(key);
   document.head.appendChild(link);
 }
 
-const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+function animateElement(element, animationIndex, duration){
+  element.style.animation = "none";
+  void element.offsetWidth;
 
-      const card = entry.target;
+  element.style.animation =
+    "a" + (animationIndex + 1) +
+    " " + duration + "s ease-out both";
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const card = entry.target;
+
+    if(entry.isIntersecting){
       const index = Number(card.dataset.index);
-      const style = styles[index];
+      const item = styles[index];
 
-      loadFont(style.family, style.weight);
-      observer.unobserve(card);
-    });
-  },
-  { rootMargin: "250px" }
-);
+      loadFont(item.family,item.weight);
 
-function createCards() {
+      if(!card.dataset.played){
+        animateElement(
+          card.querySelector(".font-preview"),
+          item.animation,
+          1.2
+        );
+        card.dataset.played = "1";
+      }
+    }
+  });
+},{rootMargin:"150px"});
+
+function createCards(){
   const fragment = document.createDocumentFragment();
 
-  styles.forEach((style, index) => {
+  styles.forEach((item,index) => {
     const card = document.createElement("div");
     card.className = "font-card";
     card.dataset.index = index;
 
-    const number = document.createElement("div");
-    number.className = "font-number";
-    number.textContent = "#" + (index + 1);
+    const top = document.createElement("div");
+    top.className = "card-top";
+
+    const num = document.createElement("span");
+    num.textContent = "#" + (index+1);
+
+    const anim = document.createElement("span");
+    anim.textContent = animationNames[item.animation];
+
+    top.append(num,anim);
+
+    const stage = document.createElement("div");
+    stage.className = "preview-stage";
 
     const preview = document.createElement("div");
     preview.className = "font-preview";
     preview.textContent = "METHAI";
+    preview.style.fontFamily = '"' + item.family + '",sans-serif';
+    preview.style.fontWeight = item.weight;
+    preview.style.color = item.color;
 
-    preview.style.fontFamily =
-      '"' + style.family + '", sans-serif';
-    preview.style.fontWeight = style.weight;
-    preview.style.color = getColor(index);
+    stage.appendChild(preview);
+
+    const bottom = document.createElement("div");
 
     const name = document.createElement("div");
     name.className = "font-name";
-    name.textContent =
-      style.family + " — " + style.weight;
+    name.textContent = item.family + " — " + item.weight;
 
-    card.append(number, preview, name);
+    const animationLabel = document.createElement("div");
+    animationLabel.className = "animation-name";
+    animationLabel.textContent = animationNames[item.animation];
 
-    card.addEventListener("click", () => {
-      selectFont(index, card);
-    });
+    bottom.append(name,animationLabel);
+    card.append(top,stage,bottom);
+
+    card.addEventListener("click",() => selectFont(index,card));
 
     fragment.appendChild(card);
   });
@@ -675,36 +675,33 @@ function createCards() {
   updateCount();
 }
 
-function selectFont(index, card) {
+function selectFont(index,card){
   selectedIndex = index;
+  const item = styles[index];
 
-  const style = styles[index];
-
-  loadFont(style.family, style.weight);
+  loadFont(item.family,item.weight);
 
   document.querySelectorAll(".font-card.selected")
     .forEach(el => el.classList.remove("selected"));
 
   card.classList.add("selected");
 
-  const logo = document.getElementById("selectedLogo");
+  bigLogo.style.fontFamily = '"' + item.family + '",sans-serif';
+  bigLogo.style.fontWeight = item.weight;
+  bigLogo.style.color = item.color;
 
-  logo.style.fontFamily =
-    '"' + style.family + '", sans-serif';
-  logo.style.fontWeight = style.weight;
-  logo.style.color = getColor(index);
-
-  document.getElementById("selectedName").textContent =
-    "#" + (index + 1) + " — " +
-    style.family + " (" + style.weight + ")";
+  selectedInfo.textContent =
+    "#" + (index+1) + " — " + item.family +
+    " (" + item.weight + ") • " +
+    animationNames[item.animation];
 
   createColorOptions();
+  modal.classList.add("show");
 
-  document.getElementById("selectedPanel")
-    .classList.add("show");
+  animateElement(bigLogo,item.animation,animationSpeed);
 }
 
-function createColorOptions() {
+function createColorOptions(){
   const row = document.getElementById("colorRow");
   row.innerHTML = "";
 
@@ -715,61 +712,105 @@ function createColorOptions() {
     dot.title = color;
 
     dot.onclick = () => {
-      document.getElementById("selectedLogo")
-        .style.color = color;
+      bigLogo.style.color = color;
     };
 
     row.appendChild(dot);
   });
 }
 
-function closePreview() {
-  document.getElementById("selectedPanel")
-    .classList.remove("show");
+function closePreview(){
+  modal.classList.remove("show");
+  bigLogo.style.animation = "none";
 }
 
-function shuffleColors() {
+function replayAnimation(){
+  if(selectedIndex < 0) return;
+  animateElement(
+    bigLogo,
+    styles[selectedIndex].animation,
+    animationSpeed
+  );
+}
+
+function shuffleColors(){
   colorOffset = (colorOffset + 5) % colors.length;
 
   document.querySelectorAll(".font-card")
-    .forEach((card, index) => {
-      card.querySelector(".font-preview")
-        .style.color = getColor(index);
+    .forEach((card,index) => {
+      const color = colors[
+        (index * 7 + colorOffset) % colors.length
+      ];
+
+      styles[index].color = color;
+      card.querySelector(".font-preview").style.color = color;
     });
 }
 
-function filterFonts() {
+function filterFonts(){
   const query = document.getElementById("search")
     .value.toLowerCase().trim();
 
   document.querySelectorAll(".font-card")
-    .forEach((card, index) => {
-      const style = styles[index];
+    .forEach((card,index) => {
+      const item = styles[index];
+      const animation = animationNames[item.animation];
 
       const matches =
-        style.family.toLowerCase().includes(query) ||
-        String(index + 1) === query ||
-        String(style.weight).includes(query);
+        item.family.toLowerCase().includes(query) ||
+        String(index+1) === query ||
+        animation.toLowerCase().includes(query);
 
       card.style.display = matches ? "flex" : "none";
 
-      if (matches) observer.observe(card);
+      if(matches) observer.observe(card);
     });
 
   updateCount();
 }
 
-function updateCount() {
+function updateCount(){
   let visible = 0;
 
   document.querySelectorAll(".font-card")
     .forEach(card => {
-      if (card.style.display !== "none") visible++;
+      if(card.style.display !== "none") visible++;
     });
 
   document.getElementById("count").textContent =
     visible + " of " + styles.length + " styles";
 }
+
+document.getElementById("search")
+  .addEventListener("input",filterFonts);
+
+document.getElementById("shuffleBtn")
+  .addEventListener("click",shuffleColors);
+
+document.getElementById("closeIcon")
+  .addEventListener("click",closePreview);
+
+document.getElementById("closeBtn")
+  .addEventListener("click",closePreview);
+
+document.getElementById("replayBtn")
+  .addEventListener("click",replayAnimation);
+
+document.getElementById("speed")
+  .addEventListener("input",function(){
+    animationSpeed = Number(this.value);
+    document.getElementById("speedValue").textContent =
+      animationSpeed.toFixed(1) + "s";
+    replayAnimation();
+  });
+
+modal.addEventListener("click",e => {
+  if(e.target === modal) closePreview();
+});
+
+document.addEventListener("keydown",e => {
+  if(e.key === "Escape") closePreview();
+});
 
 createCards();
 </script>
